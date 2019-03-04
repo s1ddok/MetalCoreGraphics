@@ -42,6 +42,6 @@ fragment half4 fragmentFunc(MTLTextureViewVertexOut in [[stage_in]],
     half4 blurredColor = blurred.sample(s, in.uv);
     half mask = visibilityMask.sample(s, in.uv).r;
 
-    return blurredColor;//mix(originalColor, blurredColor, mask);
+    return mix(originalColor, blurredColor, 1.0 - mask);
 }
 

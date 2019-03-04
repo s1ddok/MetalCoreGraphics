@@ -26,11 +26,12 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var metalView: MTKView!
 
-
     let metalContext = MTLContext(device: Metal.device)
+    var cgContext: CGContext?
 
     var originalTexture: MTLTexture?
     var blurredTexture: MTLTexture?
+    var mask: MTLTexture?
     var renderState: MTLRenderPipelineState?
 
     override func viewDidLoad() {
@@ -66,51 +67,41 @@ class ViewController: UIViewController {
         self.metalView.depthStencilPixelFormat = .invalid
         self.metalView.device = self.metalContext.device
         self.metalView.delegate = self
-
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    var lastPoint: CGPoint? = nil
 
-        let pagesize = Int(getpagesize())
-        let width = 512
-        let height = 512
-        let bytesPerRow = width * 1
-        var data: UnsafeMutableRawPointer? = nil
-        let result = posix_memalign(&data, pagesize, alignUp(size: width * height * bytesPerRow, align: pagesize))
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let location = touches.first!.location(in: self.metalView)
+        let normalizedLocation = CGPoint(x: location.x / self.metalView.bounds.width,
+                                         y: location.y / self.metalView.bounds.height)
+        let maskLocation = CGPoint(x: normalizedLocation.x * CGFloat(self.cgContext!.width),
+                                   y: normalizedLocation.y * CGFloat(self.cgContext!.height))
 
-        let context = CGContext(data: data,
-                                width: width,
-                                height: height,
-                                bitsPerComponent: 8,
-                                bytesPerRow: bytesPerRow,
-                                space: CGColorSpaceCreateDeviceGray(),
-                                bitmapInfo: CGImageAlphaInfo.none.rawValue)
-
-        context?.setLineWidth(10.0)
-        context?.setStrokeColor(gray: 1.0, alpha: 1.0)
-        context?.beginPath()
-        context?.move(to: .zero)
-        context?.addLine(to: CGPoint(x: 512, y: 512))
-        context?.strokePath()
-
-        let buffer = metalContext.device.makeBuffer(bytesNoCopy: context!.data!,
-                                                    length: context!.bytesPerRow * context!.height,
-                                                    options: .storageModeShared,
-                                                    deallocator: nil)
-
-        let textureDescriptor = MTLTextureDescriptor()
-        textureDescriptor.pixelFormat = .r8Unorm
-        textureDescriptor.width = context!.width
-        textureDescriptor.height = context!.height
-        textureDescriptor.storageMode = .shared
-        textureDescriptor.usage = .shaderRead
-
-        let texture = buffer!.makeTexture(descriptor: textureDescriptor,
-                                          offset: 0,
-                                          bytesPerRow: context!.bytesPerRow)
+        self.lastPoint = maskLocation
     }
 
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let location = touches.first!.location(in: self.metalView)
+        let normalizedLocation = CGPoint(x: location.x / self.metalView.bounds.width,
+                                         y: location.y / self.metalView.bounds.height)
+        let maskLocation = CGPoint(x: normalizedLocation.x * CGFloat(self.cgContext!.width),
+                                   y: normalizedLocation.y * CGFloat(self.cgContext!.height))
+
+        self.cgContext?.move(to: self.lastPoint!)
+        self.cgContext?.addLine(to: maskLocation)
+        self.cgContext?.strokePath()
+
+        self.lastPoint = maskLocation
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        lastPoint = nil
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        lastPoint = nil
+    }
 }
 
 extension ViewController: MTKViewDelegate {
@@ -118,7 +109,7 @@ extension ViewController: MTKViewDelegate {
         try? self.metalContext.scheduleAndWait { buffer in
             buffer.render(descriptor: view.currentRenderPassDescriptor!) { encoder in
                 encoder.setRenderPipelineState(self.renderState!)
-                encoder.set(fragmentTextures: [self.originalTexture, self.blurredTexture, nil])
+                encoder.set(fragmentTextures: [self.originalTexture, self.blurredTexture, self.mask])
                 encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
             }
 
@@ -127,5 +118,43 @@ extension ViewController: MTKViewDelegate {
     }
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+        let pagesize = Int(getpagesize())
+        let width = Int(size.width)
+        let height = Int(size.height)
+        let bytesPerRow = alignUp(size: width, align: self.metalContext.device.minimumTextureBufferAlignment(for: .r8Unorm))
+        var data: UnsafeMutableRawPointer? = nil
+        let allocationSize = alignUp(size: width * height, align: pagesize)
+        let result = posix_memalign(&data, pagesize, allocationSize)
+
+        let context = CGContext(data: data,
+                                width: width,
+                                height: height,
+                                bitsPerComponent: 8,
+                                bytesPerRow: bytesPerRow,
+                                space: CGColorSpaceCreateDeviceGray(),
+                                bitmapInfo: CGImageAlphaInfo.none.rawValue)!
+
+        context.scaleBy(x: 1.0, y: -1.0)
+        context.translateBy(x: 0, y: -CGFloat(context.height))
+        context.setLineJoin(.round)
+        context.setLineWidth(64)
+        context.setStrokeColor(gray: 1.0, alpha: 1.0)
+
+        let buffer = metalContext.device.makeBuffer(bytesNoCopy: context.data!,
+                                                    length: allocationSize,
+                                                    options: .storageModeShared,
+                                                    deallocator: { pointer, length in free(data) })
+
+        let textureDescriptor = MTLTextureDescriptor()
+        textureDescriptor.pixelFormat = .r8Unorm
+        textureDescriptor.width = context.width
+        textureDescriptor.height = context.height
+        textureDescriptor.storageMode = .shared
+        textureDescriptor.usage = .shaderRead
+
+        self.mask = buffer!.makeTexture(descriptor: textureDescriptor,
+                                        offset: 0,
+                                        bytesPerRow: context.bytesPerRow)
+        self.cgContext = context
     }
 }
