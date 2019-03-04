@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alloy
 
 class ViewController: UIViewController {
 
@@ -42,7 +43,8 @@ class ViewController: UIViewController {
 
         self.imageView.image = uiimage
 
-        
+
+
     }
 
 

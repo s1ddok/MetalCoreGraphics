@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		819140B1EF5574F6293704CD /* Pods_MetalCoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A05FE4AC709B389125BDB86F /* Pods_MetalCoreGraphics.framework */; };
 		935E378D222DBC51000FA6D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935E378C222DBC51000FA6D2 /* AppDelegate.swift */; };
 		935E378F222DBC51000FA6D2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935E378E222DBC51000FA6D2 /* ViewController.swift */; };
 		935E3792222DBC51000FA6D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 935E3790222DBC51000FA6D2 /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0123ED607377DDD35F5E61DA /* Pods-MetalCoreGraphics.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalCoreGraphics.release.xcconfig"; path = "Target Support Files/Pods-MetalCoreGraphics/Pods-MetalCoreGraphics.release.xcconfig"; sourceTree = "<group>"; };
 		935E3789222DBC51000FA6D2 /* MetalCoreGraphics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalCoreGraphics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		935E378C222DBC51000FA6D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		935E378E222DBC51000FA6D2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +24,8 @@
 		935E3793222DBC53000FA6D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		935E3796222DBC53000FA6D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		935E3798222DBC53000FA6D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A05FE4AC709B389125BDB86F /* Pods_MetalCoreGraphics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetalCoreGraphics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEDDCB6333B005170B061CE5 /* Pods-MetalCoreGraphics.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalCoreGraphics.debug.xcconfig"; path = "Target Support Files/Pods-MetalCoreGraphics/Pods-MetalCoreGraphics.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +33,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				819140B1EF5574F6293704CD /* Pods_MetalCoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4DFEFCF1E0460230EC2A94B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A05FE4AC709B389125BDB86F /* Pods_MetalCoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		935E3780222DBC51000FA6D2 = {
 			isa = PBXGroup;
 			children = (
 				935E378B222DBC51000FA6D2 /* MetalCoreGraphics */,
 				935E378A222DBC51000FA6D2 /* Products */,
+				E264680D26C94BC11CA5A93F /* Pods */,
+				4DFEFCF1E0460230EC2A94B0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +79,16 @@
 			path = MetalCoreGraphics;
 			sourceTree = "<group>";
 		};
+		E264680D26C94BC11CA5A93F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EEDDCB6333B005170B061CE5 /* Pods-MetalCoreGraphics.debug.xcconfig */,
+				0123ED607377DDD35F5E61DA /* Pods-MetalCoreGraphics.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -71,9 +96,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 935E379B222DBC53000FA6D2 /* Build configuration list for PBXNativeTarget "MetalCoreGraphics" */;
 			buildPhases = (
+				2097837DAC5728A265874C51 /* [CP] Check Pods Manifest.lock */,
 				935E3785222DBC51000FA6D2 /* Sources */,
 				935E3786222DBC51000FA6D2 /* Frameworks */,
 				935E3787222DBC51000FA6D2 /* Resources */,
+				5E08483FFB501E059297CC0C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -129,6 +156,53 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2097837DAC5728A265874C51 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MetalCoreGraphics-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5E08483FFB501E059297CC0C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MetalCoreGraphics/Pods-MetalCoreGraphics-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alloy/Alloy.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alloy.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MetalCoreGraphics/Pods-MetalCoreGraphics-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		935E3785222DBC51000FA6D2 /* Sources */ = {
@@ -280,6 +354,7 @@
 		};
 		935E379C222DBC53000FA6D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EEDDCB6333B005170B061CE5 /* Pods-MetalCoreGraphics.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -299,6 +374,7 @@
 		};
 		935E379D222DBC53000FA6D2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0123ED607377DDD35F5E61DA /* Pods-MetalCoreGraphics.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
