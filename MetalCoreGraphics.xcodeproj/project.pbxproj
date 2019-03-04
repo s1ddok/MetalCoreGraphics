@@ -13,6 +13,7 @@
 		935E3792222DBC51000FA6D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 935E3790222DBC51000FA6D2 /* Main.storyboard */; };
 		935E3794222DBC53000FA6D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 935E3793222DBC53000FA6D2 /* Assets.xcassets */; };
 		935E3797222DBC53000FA6D2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 935E3795222DBC53000FA6D2 /* LaunchScreen.storyboard */; };
+		935E379F222DC7CC000FA6D2 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 935E379E222DC7CC000FA6D2 /* Shaders.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		935E3793222DBC53000FA6D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		935E3796222DBC53000FA6D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		935E3798222DBC53000FA6D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		935E379E222DC7CC000FA6D2 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		A05FE4AC709B389125BDB86F /* Pods_MetalCoreGraphics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetalCoreGraphics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEDDCB6333B005170B061CE5 /* Pods-MetalCoreGraphics.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalCoreGraphics.debug.xcconfig"; path = "Target Support Files/Pods-MetalCoreGraphics/Pods-MetalCoreGraphics.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -75,6 +77,7 @@
 				935E3793222DBC53000FA6D2 /* Assets.xcassets */,
 				935E3795222DBC53000FA6D2 /* LaunchScreen.storyboard */,
 				935E3798222DBC53000FA6D2 /* Info.plist */,
+				935E379E222DC7CC000FA6D2 /* Shaders.metal */,
 			);
 			path = MetalCoreGraphics;
 			sourceTree = "<group>";
@@ -85,7 +88,6 @@
 				EEDDCB6333B005170B061CE5 /* Pods-MetalCoreGraphics.debug.xcconfig */,
 				0123ED607377DDD35F5E61DA /* Pods-MetalCoreGraphics.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -209,6 +211,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				935E379F222DC7CC000FA6D2 /* Shaders.metal in Sources */,
 				935E378F222DBC51000FA6D2 /* ViewController.swift in Sources */,
 				935E378D222DBC51000FA6D2 /* AppDelegate.swift in Sources */,
 			);
