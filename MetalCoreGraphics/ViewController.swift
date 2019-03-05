@@ -118,13 +118,19 @@ extension ViewController: MTKViewDelegate {
     }
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        let pagesize = Int(getpagesize())
         let width = Int(size.width)
         let height = Int(size.height)
-        let bytesPerRow = alignUp(size: width, align: self.metalContext.device.minimumTextureBufferAlignment(for: .r8Unorm))
+
+        let pixelRowAlignment = self.metalContext.device.minimumTextureBufferAlignment(for: .r8Unorm)
+        let bytesPerRow = alignUp(size: width, align: pixelRowAlignment)
+
+        let pagesize = Int(getpagesize())
+        let allocationSize = alignUp(size: bytesPerRow * height, align: pagesize)
         var data: UnsafeMutableRawPointer? = nil
-        let allocationSize = alignUp(size: width * height, align: pagesize)
         let result = posix_memalign(&data, pagesize, allocationSize)
+        if result != noErr {
+            fatalError("Error during memory allocation")
+        }
 
         let context = CGContext(data: data,
                                 width: width,
@@ -140,21 +146,24 @@ extension ViewController: MTKViewDelegate {
         context.setLineWidth(64)
         context.setStrokeColor(gray: 1.0, alpha: 1.0)
 
-        let buffer = metalContext.device.makeBuffer(bytesNoCopy: context.data!,
-                                                    length: allocationSize,
-                                                    options: .storageModeShared,
-                                                    deallocator: { pointer, length in free(data) })
+        let buffer = self.metalContext
+                         .device
+                         .makeBuffer(bytesNoCopy: context.data!,
+                                     length: allocationSize,
+                                     options: .storageModeShared,
+                                     deallocator: { pointer, length in free(data) })!
 
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.pixelFormat = .r8Unorm
         textureDescriptor.width = context.width
         textureDescriptor.height = context.height
-        textureDescriptor.storageMode = .shared
+        textureDescriptor.storageMode = buffer.storageMode
+        // we are only going to read from this texture on GPU side
         textureDescriptor.usage = .shaderRead
 
-        self.mask = buffer!.makeTexture(descriptor: textureDescriptor,
-                                        offset: 0,
-                                        bytesPerRow: context.bytesPerRow)
+        self.mask = buffer.makeTexture(descriptor: textureDescriptor,
+                                       offset: 0,
+                                       bytesPerRow: context.bytesPerRow)
         self.cgContext = context
     }
 }
