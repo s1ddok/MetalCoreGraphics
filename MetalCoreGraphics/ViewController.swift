@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var metalView: MTKView!
 
-    let metalContext = MTLContext(device: Metal.device)
+    let metalContext = try! MTLContext(device: Metal.device)
     var cgContext: CGContext?
 
     var originalTexture: MTLTexture?
@@ -39,8 +39,8 @@ class ViewController: UIViewController {
 
         let puppyImage = UIImage(named: "puppy")!
 
-        self.originalTexture = try! self.metalContext.texture(from: puppyImage.cgImage!)
-        self.blurredTexture = self.originalTexture?.matchingTexture(usage: [.shaderRead, .shaderWrite])
+        self.originalTexture = try? self.metalContext.texture(from: puppyImage.cgImage!, srgb: false)
+        self.blurredTexture = try? self.originalTexture?.matchingTexture(usage: [.shaderRead, .shaderWrite])
 
         let blurShader = MPSImageGaussianBlur(device: self.metalContext.device,
                                               sigma: 24.0)
@@ -51,7 +51,7 @@ class ViewController: UIViewController {
                               destinationTexture: self.blurredTexture!)
         }
 
-        let defaultLibrary = self.metalContext.standardLibrary!
+        let defaultLibrary = try! self.metalContext.library(for: .main)
         let fragment = defaultLibrary.makeFunction(name: "fragmentFunc")
         let vertex = defaultLibrary.makeFunction(name: "vertexFunc")
 
@@ -109,7 +109,7 @@ extension ViewController: MTKViewDelegate {
         try? self.metalContext.scheduleAndWait { buffer in
             buffer.render(descriptor: view.currentRenderPassDescriptor!) { encoder in
                 encoder.setRenderPipelineState(self.renderState!)
-                encoder.set(fragmentTextures: [self.originalTexture, self.blurredTexture, self.mask])
+                encoder.setFragmentTextures(self.originalTexture, self.blurredTexture, self.mask)
                 encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
             }
 
